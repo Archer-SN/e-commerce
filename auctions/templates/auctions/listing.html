@@ -1,0 +1,90 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Auction: {{ listing.title }}
+{% endblock %}
+
+{% block body %}
+    <div class="cotainer-fluid px-5 pb-3 mb-3 border border-1">
+        {% if listing.auction_status == False %}
+            <h2 class="text-danger">Auction Closed!</h2>
+            <h3><span class="text-primary">{{ listing.latest_holder }}</span> won the auction!</h3>
+        {% endif %}
+        <h2>Listing: {{ listing.title }}</h2>
+
+        {% if request.user.is_authenticated %}
+            <form action="{% url 'watchlist' %}" method="POST" class="mb-3">
+                {% csrf_token %}
+                <input hidden name="listing_id" value="{{ listing.id }}">
+                {% if in_user_watchlist %}
+                    <input type="hidden" value="remove" name="watchlist_action">
+                    <input type="submit" value="Remove Watchlist" class="btn btn-warning">
+                {% else %}
+                    <input type="hidden" value="add" name="watchlist_action">
+                    <input type="submit" value="Watchlist" class="btn btn-secondary">
+                {% endif %}
+            </form>
+            {% if request.user.id == listing.auction_owner.id and listing.auction_status == True %}
+                <form action="{% url 'listing' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="Close Auction" class="btn btn-danger mb-3">
+                </form>
+            {% endif %}
+        {% endif %}
+        <div class="row">
+            <img src="{{ listing.img_url }}" class="col-4">
+        </div>
+
+        <p class="mb-4 description">{{ listing.description }}</p>
+        <h3 class="mb-3">{{ listing.highest_bid_str }}</h3>
+
+        {% if listing.auction_status == True %}
+            <form action="{% url 'bid' listing.id %}" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="bid_amount">
+                        {{ listing.bid_count }} bid(s) so far.
+                        {% if listing.latest_holder.id == request.user.id %}
+                            Your bid is the current bid
+                        {% endif %}
+                    </label>
+                    <input required type="number" id="bid_amount" name="bid_amount" placeholder="Bid" step="0.01" class="form-control">
+                </div>
+                <input type="submit" value="Place Bid" class="btn btn-primary mb-4">
+            </form>
+        {% endif %}
+
+        <h2>Details</h2>
+        <ul class="font-weight-bold">
+            <li>Listed by: <span class="text-primary">{{ listing.auction_owner.username }}</span></li>
+            <li>
+                Category: 
+                <ul>
+                    {% for category in listing.all_categories %}
+                        <li>{{ category }}</li>
+                    
+                    {% empty %}    
+                        No Category Listed
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="px-5 py-3 border border-1">
+        <form action="{% url 'comment' listing.id %}" method="POST" class="mb-5">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="text" name="comment" placeholder="Add a comment" class="form-control">
+            </div>
+            <input type="submit" value="Comment" class="btn btn-primary">
+        </form>
+        <!--Comment is a model so we capitalize it -->
+        {% for Comment in comments %}
+            <div class="comment-container mb-4">
+                <img class="rounded-pill profile-img" class="rounded-circle profile-img" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png"> 
+                <p class="comment-author font-weight-bold text-primary">{{ Comment.comment_author }}</p> 
+                <p class="comment">{{ Comment.comment }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

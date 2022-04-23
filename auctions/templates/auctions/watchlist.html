@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Watchlist
+{% endblock %}
+
+{% block body %}
+    <h2>Watchlist</h2>
+
+    {% for listing in listings %}
+        <a href="{% url 'listing' listing.id %}" class="d-block mb-3 {% if listing.auction_status == True %} listing-link {% else %} closed-link {% endif %} ">
+            <div class="container-fluid row border border-2 p-2 listing-div">
+
+                <img src="{{ listing.img_url }}" class="d-block col-3">
+                <div class="col px-5">
+                    {% if listing.auction_status == False %}
+                        <h2 class="text-danger">Auction Closed</h2>
+                    {% endif %}
+                    <h2>{{ listing.title }}</h2>
+                    <h3>Price: {{ listing.highest_bid_str }}</h3>
+                    <p>{{ listing.description }}</p>
+                </div>
+            </div> 
+        </a>
+    {% empty %}
+        <h2>No auction</h2>
+    {% endfor %}
+{% endblock %}

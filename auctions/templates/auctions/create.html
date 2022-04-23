@@ -1,0 +1,38 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Create Listing
+{% endblock %}
+
+{% block body %}
+    {% for message in messages %}
+        <p class="alert alert-warning">{{ message }}</p>
+    {% endfor %}
+    <form action="{% url 'create' %}" method="POST" class="d-block px-5">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input required type="text" id="title" name="title" value="{{ title }}" placeholder="Auction title" autocomplete="off" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description (optional)</label>
+            <input type="text" id="description" name="description" value="{{ description }}" placeholder="Auction description" autocomplete="off" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="initial_bid" class="form-label">Starting Bid</label>
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input required type="number" id="initial_bid" name="initial_bid" min="0" value="{{ intial_bid }}" placeholder="Bid in dollar" step="0.01" autocomplete="off" class="form-control">
+            </div> 
+        </div>
+        <div class="mb-3">
+            <label for="img_url" class="form-label">Image URL (optional)</label>
+            <input type="text" id="img_url" name="img_url" value="{{ img_url }}" placeholder="Image URL" autocomplete="off" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Category (optional)</label>
+            <input type="text" id="category" name="category" value="{{ category }}" placeholder="Auction category" autocomplete="off" class="form-control">
+        </div>
+        <input type="submit" value="Create Listing" class="btn btn-primary"> 
+    </form>
+{% endblock %}

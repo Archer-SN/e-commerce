@@ -1,0 +1,26 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    Category Listings
+{% endblock %}
+
+{% block body %}
+    <h2>Category: {{ category }}</h2>
+
+    {% for listing in listings %}
+        {% if listing.auction_status == True %}
+            <a href="{% url 'listing' listing.id %}" class="d-block listing-link mb-3">
+                <div class="container-fluid row border border-2 p-2 listing-div">
+                    <img src="{{ listing.img_url }}" class="d-block col-3">
+                    <div class="col px-5">
+                        <h2>{{ listing.title }}</h2>
+                        <h3>Price: {{ listing.highest_bid_str }}</h3>
+                        <p>{{ listing.description }}</p>
+                    </div>
+                </div> 
+            </a>
+        {% endif %}
+    {% empty %}
+        <h2>No auction in this category</h2>
+    {% endfor %}
+{% endblock %}

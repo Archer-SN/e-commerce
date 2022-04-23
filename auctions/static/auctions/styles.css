@@ -1,0 +1,46 @@
+body {
+    padding: 10px;
+}
+
+a, a:hover {
+    text-decoration: none;
+}
+
+.listing-link, .closed-link {
+    color: black;
+}
+
+.listing-link:hover{
+    color:#3D8BFD;
+}
+
+.closed-link:hover{
+    color:#DC3545;
+}
+
+.listing-div:hover {
+    background-color: #f5f5f5;
+    transition: background-color 2s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+p.description {
+    font-weight: 500;
+}
+
+.profile-img {
+    width: 4.2rem;
+    height: auto;
+}
+
+.comment-container {
+    display: grid;
+    grid-template-areas: 
+    'profile author'
+    'profile comment';
+    grid-template-columns: auto 1fr;
+    column-gap: 1.2rem;
+}
+
+.profile-img { grid-area: profile; }
+.comment-author { grid-area: author;}
+.comment { grid-area: comment; }
